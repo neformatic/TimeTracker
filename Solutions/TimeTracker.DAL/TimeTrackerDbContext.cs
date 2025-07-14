@@ -18,6 +18,32 @@ public class TimeTrackerDbContext : DbContext
     {
     }
 
+    public async Task ExecuteInTransactionAsync(Func<Task> action)
+    {
+        await Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+        {
+            if (Database.CurrentTransaction is not null)
+            {
+                await action();
+            }
+            else
+            {
+                await using var transaction = await Database.BeginTransactionAsync();
+
+                try
+                {
+                    await action();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+        });
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

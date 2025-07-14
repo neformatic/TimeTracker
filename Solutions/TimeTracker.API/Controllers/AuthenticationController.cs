@@ -36,7 +36,7 @@ public class AuthenticationController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> LogoutAsync()
+    public async Task<IActionResult> Logout()
     {
         _authCookieHelper.ClearAuthCookies(Response);
         return Ok();

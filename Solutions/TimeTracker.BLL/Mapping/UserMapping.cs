@@ -4,11 +4,12 @@ using TimeTracker.DAL.Entities;
 
 namespace TimeTracker.BLL.Mapping;
 
-public class UserProfileMapping : Profile
+public class UserMapping : Profile
 {
-    public UserProfileMapping()
+    public UserMapping()
     {
-        CreateMap<CreateUserModel, User>().ReverseMap();
+        CreateMap<CreateUserModel, User>();
         CreateMap<UpdateUserModel, User>();
+        CreateMap<UserModel, User>().ReverseMap();
     }
 }

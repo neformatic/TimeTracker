@@ -15,4 +15,5 @@ public class ErrorMessageConstants
     public const string NewPasswordIsEqualToPrevious = "New password should not match your previous password for this account";
     public const string ResetPasswordTokenInvalidOrExpired = "Link is not active anymore, please, go to authorization page and try again";
     public const string SetPasswordTokenInvalidOrExpiredTemplate = "Link is not active anymore";
+    public const string ContactEmailAlreadyInUse = "Email should be unique";
 }

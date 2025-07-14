@@ -1,6 +1,6 @@
-﻿namespace TimeTracker.BLL.Models.User;
+﻿namespace TimeTracker.API.ViewModels.User;
 
-public class UpdateUserModel
+public class UpdateUserViewModel
 {
     public long Id { get; set; }
     public string Name { get; set; }

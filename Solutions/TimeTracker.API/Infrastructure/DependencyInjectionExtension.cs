@@ -11,6 +11,8 @@ using TimeTracker.Common.Constants;
 using TimeTracker.Common.Contexts;
 using TimeTracker.Common.Contexts.Interfaces;
 using TimeTracker.Common.Enums;
+using TimeTracker.Common.Helpers;
+using TimeTracker.Common.Helpers.Interfaces;
 using TimeTracker.Common.Models.Settings;
 using TimeTracker.DAL;
 
@@ -60,6 +62,7 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IHashHelper, HashHelper>();
         services.AddScoped<IPasswordHelper, PasswordHelper>();
+        services.AddScoped<IPaginationHelper, PaginationHelper>();
 
         services.AddScoped<IEmailTemplateHelper, EmailTemplateHelper>();
         services.AddScoped<ITemplateHelper, TemplateHelper>();
