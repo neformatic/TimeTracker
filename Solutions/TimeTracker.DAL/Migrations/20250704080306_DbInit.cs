@@ -14,6 +14,8 @@ namespace TimeTracker.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS citext;");
+            
             migrationBuilder.CreateTable(
                 name: "Tracks",
                 columns: table => new

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TimeTracker.BLL.Helpers.Interfaces;
 using TimeTracker.BLL.Models.User;
 using TimeTracker.BLL.Models.User.Filter;
 using TimeTracker.BLL.Services.Interfaces;
@@ -18,28 +19,30 @@ public class UserService : IUserService
 {
     private readonly TimeTrackerDbContext _dbContext;
     private readonly IPaginationHelper _paginationHelper;
+    private readonly IHashHelper _hashHelper;
     private readonly IMapper _mapper;
 
     public UserService(TimeTrackerDbContext dbContext,
         IPaginationHelper paginationHelper,
+        IHashHelper hashHelper,
         IMapper mapper)
     {
         _dbContext = dbContext;
         _paginationHelper = paginationHelper;
+        _hashHelper = hashHelper;
         _mapper = mapper;
     }
 
 
-    public async Task<UserModel> CreateUserAsync(CreateUserModel createUserModel)
+    public async Task<UserModel> CreateAsync(CreateUserModel createUserModel)
     {
         var dateTimeUtcNow = DateTimeOffset.UtcNow;
-
-        //var createUserEntity = _mapper.Map<User>(createUserModel);
+        var hashedPassword = _hashHelper.GenerateHash(createUserModel.Password);
 
         var createUserEntity = new User
         {
             Name = createUserModel.Name,
-            Password = createUserModel.Password,
+            Password = hashedPassword,
             Email = createUserModel.Email,
             UserRole = createUserModel.UserRole,
             CreatedDateTime = dateTimeUtcNow,
@@ -61,12 +64,12 @@ public class UserService : IUserService
             }
         });
 
-        var createdUserModel = await GetUserAsync(createUserEntity.Id);
+        var createdUserModel = await GetAsync(createUserEntity.Id);
 
         return createdUserModel;
     }
 
-    public async Task<UserModel> UpdateUserAsync(UpdateUserModel updateUserModel)
+    public async Task<UserModel> UpdateAsync(UpdateUserModel updateUserModel)
     {
         var user = await _dbContext.Users
             .FirstOrDefaultAsync(u => u.Id == updateUserModel.Id);
@@ -92,12 +95,12 @@ public class UserService : IUserService
             }
         });
 
-        var userModel = await GetUserAsync(user.Id);
+        var userModel = await GetAsync(user.Id);
 
         return userModel;
     }
 
-    public async Task<UserModel> GetUserAsync(long id)
+    public async Task<UserModel> GetAsync(long id)
     {
         var userModel = await _dbContext.Users
             .Where(u => u.Id == id)

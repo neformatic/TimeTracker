@@ -52,8 +52,7 @@ public class PasswordService : IPasswordService
             .Where(u => u.Email == requestResetPasswordModel.Email)
             .Select(u => new
             {
-                u.Id,
-                AssociationUrlPathEnding = ""
+                u.Id
             })
             .FirstOrDefaultAsync();
 
@@ -82,7 +81,7 @@ public class PasswordService : IPasswordService
         resetPasswordToken.IsActive = true;
         resetPasswordToken.CreatedDateTime = dateTimeUtcNow;
 
-        var link = GenerateLink(token, requestResetPasswordModel.AppUrl, ResetPasswordPath, user.AssociationUrlPathEnding);
+        var link = GenerateLink(token, requestResetPasswordModel.AppUrl, ResetPasswordPath);
         var emailMessage = await GenerateResetPasswordEmailMessageAsync(link);
 
         await _emailService.SendAsync(requestResetPasswordModel.Email, ResetPasswordEmailSubject, emailMessage);
@@ -120,7 +119,6 @@ public class PasswordService : IPasswordService
                 UserId = u.Id,
                 Name = u.Name,
                 Email = u.Email,
-                AssociationUrlPathEnding = "",
                 UserStatus = u.Status
             })
             .FirstOrDefaultAsync();
@@ -162,7 +160,7 @@ public class PasswordService : IPasswordService
         resetPasswordToken.IsActive = true;
         resetPasswordToken.CreatedDateTime = dateTimeUtcNow;
 
-        var link = GenerateLink(token, sendUserCredentialsModel.AppUrl, SetPasswordPath, userInfoDataModel.AssociationUrlPathEnding);
+        var link = GenerateLink(token, sendUserCredentialsModel.AppUrl, SetPasswordPath);
         var emailMessage = await GenerateUserCredentialsEmailMessageAsync(link, requestedCredentialsUserRole, userInfoDataModel);
 
         await _emailService.SendAsync(userInfoDataModel.Email, SendCredentialsEmailSubject, emailMessage);
@@ -190,9 +188,9 @@ public class PasswordService : IPasswordService
         return string.Join(string.Empty, Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
     }
 
-    private string GenerateLink(string token, string appUrl, string path, string associationUrlPathEnding)
+    private string GenerateLink(string token, string appUrl, string path)
     {
-        return string.Join(CharConstants.Slash, appUrl, associationUrlPathEnding, path, token);
+        return string.Join(CharConstants.Slash, appUrl, path, token);
     }
 
     private async Task<string> GenerateResetPasswordEmailMessageAsync(string link)

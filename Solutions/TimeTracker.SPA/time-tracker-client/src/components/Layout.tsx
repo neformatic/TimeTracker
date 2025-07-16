@@ -1,131 +1,230 @@
 // src/components/Layout.tsx
 import React, { useState } from 'react';
-import { Layout as AntLayout, Menu, Button, Modal, Space, Flex } from 'antd';
-import { LogoutOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
-import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import LoginForm from './LoginForm'; // Импортируем новую форму логина
-import RegisterForm from './RegisterForm'; // Импортируем новую форму регистрации
+import { Layout as AntLayout, Menu, Button, Modal, Typography, Dropdown, Space } from 'antd';
+import { UserOutlined, LogoutOutlined, DownOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
+import { useAuth } from '../auth/AuthContext';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
+import { useNavigate, Link } from 'react-router-dom';
 
 const { Header, Content, Footer } = AntLayout;
+const { Title } = Typography;
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-/**
- * @component AppLayout
- * @description Компонент макета приложения с верхним меню, футером и модальными окнами для аутентификации.
- */
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { isAuth, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [isLoginModalVisible, setIsLoginModalVisible] = useState<boolean>(false);
-  const [isRegisterModalVisible, setIsRegisterModalVisible] = useState<boolean>(false);
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/'); // Перенаправляем на главную страницу после выхода
-  };
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+  const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
 
   const showLoginModal = () => {
-    setIsRegisterModalVisible(false); // Закрываем модалку регистрации, если открыта
+    setIsRegisterModalVisible(false);
     setIsLoginModalVisible(true);
   };
 
-  const hideLoginModal = () => {
+  const handleLoginSuccess = () => {
     setIsLoginModalVisible(false);
+    navigate('/dashboard');
   };
 
   const showRegisterModal = () => {
-    setIsLoginModalVisible(false); // Закрываем модалку логина, если открыта
+    setIsLoginModalVisible(false);
     setIsRegisterModalVisible(true);
   };
 
-  const hideRegisterModal = () => {
-    setIsRegisterModalVisible(false);
-  };
-
-  const handleLoginSuccess = () => {
-    hideLoginModal();
-    navigate('/dashboard'); // Перенаправляем на дашборд после успешного логина
-  };
-
   const handleRegisterSuccess = () => {
-    hideRegisterModal();
-    // После успешной регистрации, можно предложить сразу залогиниться
-    showLoginModal();
+    setIsRegisterModalVisible(false);
+    setIsLoginModalVisible(true);
   };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  const userMenuItems = [
+    {
+      key: '1',
+      label: 'Profile',
+      icon: <UserOutlined />,
+      onClick: () => {
+        console.log('Go to profile');
+      },
+    },
+    {
+      key: '2',
+      label: 'Logout',
+      icon: <LogoutOutlined />,
+      danger: true,
+      onClick: handleLogout,
+    },
+  ];
+
+  const authButtons = isAuth ? (
+    <Dropdown menu={{ items: userMenuItems }}>
+      <Button
+        type="primary"
+        icon={<UserOutlined />}
+        size="large"
+        style={{
+          borderRadius: 8,
+          borderColor: '#4A90E2',
+          background: '#4A90E2',
+          color: '#fff',
+          fontWeight: 600,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}
+      >
+        <Space>
+          User
+          <DownOutlined />
+        </Space>
+      </Button>
+    </Dropdown>
+  ) : (
+    <Space>
+      <Button
+        type="primary"
+        icon={<LoginOutlined />}
+        onClick={showLoginModal}
+        size="large"
+        style={{
+          borderRadius: 8,
+          borderColor: '#4A90E2',
+          background: '#4A90E2',
+          color: '#fff',
+          fontWeight: 600,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}
+      >
+        Log In
+      </Button>
+      <Button
+        icon={<UserAddOutlined />}
+        onClick={showRegisterModal}
+        size="large"
+        style={{
+          borderRadius: 8,
+          borderColor: '#4A90E2',
+          background: 'transparent',
+          color: '#4A90E2',
+          fontWeight: 600,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+        }}
+      >
+        Register
+      </Button>
+    </Space>
+  );
 
   return (
     <AntLayout style={{ minHeight: '100vh' }}>
-      <Header style={{ background: '#fff', padding: '0 20px', borderBottom: '1px solid #f0f0f0' }}>
-        <Flex justify="space-between" align="center" style={{ height: '100%' }}>
-          <div className="logo" style={{ color: '#001529', fontSize: '20px', fontWeight: 'bold' }}>
-            TimeTracker
-          </div>
-          <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ flex: 1, borderBottom: 'none' }}>
-            {/* Здесь можно добавить другие пункты меню, если нужно */}
-            {isAuth && (
-              <Menu.Item key="dashboard" onClick={() => navigate('/dashboard')}>
-                Dashboard
-              </Menu.Item>
-            )}
-          </Menu>
-
-          <Space>
-            {!isAuth ? (
-              <>
-                <Button icon={<LoginOutlined />} onClick={showLoginModal}>
-                  Login
-                </Button>
-                <Button icon={<UserAddOutlined />} type="primary" onClick={showRegisterModal}>
-                  Register
-                </Button>
-              </>
-            ) : (
-              <Button icon={<LogoutOutlined />} onClick={handleLogout}>
-                Logout
-              </Button>
-            )}
-          </Space>
-        </Flex>
+      <Header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 48px',
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(10px)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          height: 80,
+        }}
+      >
+        <Title level={3} style={{ color: '#263238', margin: 0, fontWeight: 700 }}>
+          <Link to="/" style={{ color: '#263238', textDecoration: 'none' }}>TimeTracker</Link>
+        </Title>
+        <Menu
+          theme="light"
+          mode="horizontal"
+          defaultSelectedKeys={['1']}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            justifyContent: 'flex-end',
+            background: 'transparent',
+            borderBottom: 'none',
+          }}
+        >
+        </Menu>
+        {authButtons}
       </Header>
 
-      <Content style={{ padding: '24px 50px', flex: 1 }}>
-        <div className="site-layout-content" style={{ background: '#fff', padding: 24, minHeight: 'calc(100vh - 170px)', borderRadius: '8px' }}>
-          {children} {/* Здесь будет рендериться содержимое текущей страницы (DashboardPage) */}
-        </div>
+      <Content
+        style={{
+          padding: '0',
+          flex: 1,
+          background: 'linear-gradient(to bottom, #e0f7fa 0%, #a7d9f7 100%)',
+          display: 'flex',
+          justifyContent: 'center',
+          // align-items: 'flex-start' уже установлен, это то, что нужно для избежания растяжения по высоте
+          alignItems: 'flex-start',
+          paddingTop: 24,
+          paddingBottom: 24,
+        }}
+      >
+        {children}
       </Content>
 
-      <Footer style={{ textAlign: 'center' }}>TimeTracker ©2024 Created by You</Footer>
+      <Footer
+        style={{
+          textAlign: 'center',
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(10px)',
+          color: '#455A64',
+          padding: '20px 0',
+        }}
+      >
+        TimeTracker ©2024 Created by You
+      </Footer>
 
       {/* Модальное окно для логина */}
       <Modal
-        title="Login to Your Account"
+        title={<Title level={4} style={{ margin: 0, color: '#263238' }}>Log In</Title>}
         open={isLoginModalVisible}
-        onCancel={hideLoginModal}
-        footer={null} // Отключаем стандартный футер модального окна
-        destroyOnClose // Разрушать компоненты внутри модалки при закрытии, чтобы сбросить форму
+        onCancel={() => setIsLoginModalVisible(false)}
+        footer={null}
+        width={500} // Уменьшено с 750px до 500px
+        bodyStyle={{
+          padding: '24px',
+          borderRadius: 12,
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(15px)',
+        }}
+        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+        // top задаёт позицию модалки сверху. Это помогает ей не растягиваться по высоте
+        style={{ top: 100 }}
       >
         <LoginForm
           onSuccess={handleLoginSuccess}
-          onSwitchToRegister={showRegisterModal} // Кнопка переключения
+          onSwitchToRegister={showRegisterModal}
         />
       </Modal>
 
       {/* Модальное окно для регистрации */}
       <Modal
-        title="Create New Account"
+        title={<Title level={4} style={{ margin: 0, color: '#263238' }}>Register</Title>}
         open={isRegisterModalVisible}
-        onCancel={hideRegisterModal}
+        onCancel={() => setIsRegisterModalVisible(false)}
         footer={null}
-        destroyOnClose
+        width={500} // Уменьшено с 750px до 500px
+        bodyStyle={{
+          padding: '24px',
+          borderRadius: 12,
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(15px)',
+        }}
+        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+        // top задаёт позицию модалки сверху. Это помогает ей не растягиваться по высоте
+        style={{ top: 100 }}
       >
         <RegisterForm
           onSuccess={handleRegisterSuccess}
-          onSwitchToLogin={showLoginModal} // Кнопка переключения
+          onSwitchToLogin={showLoginModal}
         />
       </Modal>
     </AntLayout>

@@ -1,8 +1,7 @@
-// src/auth/AuthContext.tsx
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import apiClient from '../api/apiClient';
-import { IAuthContextType } from './types'; // Импортируем интерфейс контекста
-import { ILoginRequest, IRegisterRequest } from '../types/api'; // Импортируем IRegisterRequest
+import { IAuthContextType } from './types';
+import { ILoginRequest, IRegisterRequest } from '../types/api';
 
 // Создаем контекст аутентификации. Инициализируем его как null,
 // так как его реальное значение будет предоставлено AuthProvider.
@@ -34,7 +33,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // (например, отправка запроса к API для валидации куки или токена).
   useEffect(() => {
     // Для этого примера, мы просто считаем, что проверка завершена после монтирования.
-    // В случае наличия эндпоинта проверки сессии, запрос был бы здесь.
     setLoading(false);
   }, []);
 
@@ -48,18 +46,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const loginData: ILoginRequest = { email, password };
-      // Отправляем POST-запрос на эндпоинт Login вашего бэкенда.
-      // `apiClient` настроен с `withCredentials: true`, поэтому браузер автоматически
-      // отправит куки сессии и получит новые.
       await apiClient.post('/Authentication/Login', loginData);
       setIsAuth(true); // Устанавливаем статус аутентификации в true
-      console.log('Login successful');
+      console.log('Login successful'); // Лог для отслеживания успеха
       return { success: true }; // Возвращаем успешный результат
-    } catch (error: any) { // Используем `any` для ошибок Axios, чтобы получить доступ к `response`
-      console.error('Login failed:', error.response?.data || error.message);
+    } catch (error: any) {
+      console.error('Login failed:', error.response?.data || error.message); // Лог для отслеживания ошибки
       setIsAuth(false); // Сбрасываем статус аутентификации в случае ошибки
-      // Возвращаем информацию об ошибке для отображения пользователю
-      return { success: false, error: error.response?.data?.message || 'An unknown error occurred' };
+      
+      let errorMessage = 'An unknown error occurred. Please try again.';
+
+      // Пытаемся извлечь сообщение об ошибке из ответа сервера
+      if (error.response?.data) {
+        const responseData = error.response.data;
+        if (typeof responseData === 'object' && responseData !== null && 'errorMessage' in responseData) {
+          errorMessage = (responseData as { errorMessage: string }).errorMessage;
+        } else if (typeof responseData === 'string' && responseData.length > 0) {
+          errorMessage = responseData;
+        }
+      } else if (error.message) {
+        errorMessage = error.message; // Если нет данных ответа, используем сообщение из объекта ошибки
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -74,16 +83,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Бэкенд очистит куки, и браузер перестанет их отправлять.
       await apiClient.post('/Authentication/Logout');
       setIsAuth(false); // Сбрасываем статус аутентификации
-      console.log('Logout successful');
+      console.log('Logout successful'); // Лог для отслеживания успеха
     } catch (error: any) {
-      console.error('Logout failed:', error.response?.data || error.message);
+      console.error('Logout failed:', error.response?.data || error.message); // Лог для отслеживания ошибки
       // В случае ошибки при логауте, можно также сбросить статус,
       // так как цель - выйти, даже если бэкенд вернул ошибку
       setIsAuth(false);
     }
   };
 
-  // --- НОВАЯ ФУНКЦИЯ РЕГИСТРАЦИИ ---
   /**
    * @function register
    * @description Функция для выполнения регистрации нового пользователя.
@@ -92,20 +100,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   const register = async (data: IRegisterRequest): Promise<{ success: boolean; error?: string }> => {
     try {
-      // Изменяем эндпоинт на '/User/CreateUser'
-      await apiClient.post('/User/CreateUser', data); // Эндпоинт для регистрации
-      console.log('Registration successful');
-      // В зависимости от вашей логики, возможно, сразу после регистрации нужно выполнить логин
-      // или перенаправить пользователя на страницу логина с сообщением.
-      // Для простоты, мы не будем автоматически логинить после регистрации,
-      // пользователь должен будет залогиниться сам.
+      // Изменяем эндпоинт на '/User/Create' для регистрации
+      await apiClient.post('/User/Create', data);
+      console.log('Registration successful'); // Лог для отслеживания успеха
       return { success: true };
     } catch (error: any) {
-      console.error('Registration failed:', error.response?.data || error.message);
-      return { success: false, error: error.response?.data?.message || 'An unknown error occurred' };
+      console.error('Registration failed:', error.response?.data || error.message); // Лог для отслеживания ошибки
+      
+      let errorMessage = 'An unknown error occurred. Please try again.';
+      
+      // Пытаемся извлечь сообщение об ошибке из ответа сервера
+      if (error.response?.data) {
+        const responseData = error.response.data;
+        if (typeof responseData === 'object' && responseData !== null && 'errorMessage' in responseData) {
+          errorMessage = (responseData as { errorMessage: string }).errorMessage;
+        } else if (typeof responseData === 'string' && responseData.length > 0) {
+          errorMessage = responseData;
+        }
+      } else if (error.message) {
+        errorMessage = error.message; // Если нет данных ответа, используем сообщение из объекта ошибки
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
-  // --- КОНЕЦ НОВОЙ ФУНКЦИИ ---
 
   // Объект, содержащий состояние и функции, которые будут доступны через контекст
   const value: IAuthContextType = {
@@ -122,4 +140,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {!loading && children}
     </AuthContext.Provider>
   );
+};
+
+/**
+ * @function useAuth
+ * @description Кастомный хук для удобного доступа к контексту аутентификации.
+ * Позволяет компонентам получать доступ к isAuth, loading, login, logout и register
+ * без прямого использования useContext(AuthContext).
+ * Выбрасывает ошибку, если используется вне AuthProvider.
+ */
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

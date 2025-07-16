@@ -23,9 +23,9 @@ public class UserController : ApiControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetUser(long id)
+    public async Task<IActionResult> Get(long id)
     {
-        var userModel = await _userService.GetUserAsync(id);
+        var userModel = await _userService.GetAsync(id);
         var userViewModel = _mapper.Map<UserViewModel>(userModel);
 
         return Ok(userViewModel);
@@ -33,20 +33,20 @@ public class UserController : ApiControllerBase
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> CreateUser(CreateUserViewModel createUserViewModel)
+    public async Task<IActionResult> Create(CreateUserViewModel createUserViewModel)
     {
         var createUserModel = _mapper.Map<CreateUserModel>(createUserViewModel);
-        var createdUserModel = await _userService.CreateUserAsync(createUserModel);
+        var createdUserModel = await _userService.CreateAsync(createUserModel);
         var userViewModel = _mapper.Map<UserViewModel>(createdUserModel);
 
         return Ok(userViewModel);
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateUser(UpdateUserViewModel updateUserViewModel)
+    public async Task<IActionResult> Update(UpdateUserViewModel updateUserViewModel)
     {
         var updateUserModel = _mapper.Map<UpdateUserModel>(updateUserViewModel);
-        var userModel = await _userService.UpdateUserAsync(updateUserModel);
+        var userModel = await _userService.UpdateAsync(updateUserModel);
         var userViewModel = _mapper.Map<UserViewModel>(userModel);
 
         return Ok(userViewModel);

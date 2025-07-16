@@ -32,7 +32,7 @@ public class EmailService : IEmailService
         }
         else
         {
-            await client.ConnectAsync(_emailSettings.SmtpHost, _emailSettings.SmtpPort, SecureSocketOptions.None);
+            await client.ConnectAsync(_emailSettings.SmtpHost, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
         }
 
         if (!string.IsNullOrEmpty(_emailSettings.Password))
