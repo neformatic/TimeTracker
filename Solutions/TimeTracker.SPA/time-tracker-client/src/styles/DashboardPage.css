@@ -1,0 +1,33 @@
+.dashboard-container {
+  min-height: calc(100vh - 64px);
+  padding: 24px;
+  width: 100%;
+}
+
+.dashboard-card {
+  width: 80%;
+  max-width: 900px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+  padding: 40px 30px;
+}
+
+.dashboard-card .ant-card-body {
+  padding: 0;
+}
+
+.dashboard-title {
+  color: #263238;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.dashboard-description {
+  font-size: 1.2em;
+  color: #455A64;
+  line-height: 1.6;
+}

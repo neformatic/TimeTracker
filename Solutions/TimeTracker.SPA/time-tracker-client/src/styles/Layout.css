@@ -1,0 +1,81 @@
+.layout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 80px;
+}
+
+.layout-title {
+  color: #263238;
+  margin: 0;
+  font-weight: 700;
+}
+
+.layout-title a {
+  color: #263238;
+  text-decoration: none;
+}
+
+.layout-menu {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+  background: transparent;
+  border-bottom: none;
+}
+
+.layout-content {
+  padding: 0;
+  flex: 1;
+  background: linear-gradient(to bottom, #e0f7fa 0%, #a7d9f7 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.layout-footer {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  color: #455A64;
+  padding: 20px 0;
+}
+
+.auth-buttons .ant-btn-primary {
+  border-radius: 8px;
+  border-color: #4A90E2;
+  background: #4A90E2;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-buttons .ant-btn-default {
+  border-radius: 8px;
+  border-color: #4A90E2;
+  background: transparent;
+  color: #4A90E2;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.modal-body {
+  padding: 24px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+}
+
+.modal-mask {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.modal-container {
+  top: 100px;
+}

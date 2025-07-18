@@ -10,9 +10,21 @@ public class TrackConfiguration : IEntityTypeConfiguration<Track>
     {
         builder.HasKey(t => t.Id);
 
-        builder.Property(t => t.Title).IsRequired().HasMaxLength(255);
-        builder.Property(t => t.Artist).IsRequired().HasMaxLength(255);
-        builder.Property(t => t.Genre).HasMaxLength(100);
-        builder.Property(t => t.FilePath).IsRequired();
+        builder.Property(t => t.Title)
+            .IsRequired()
+            .HasMaxLength(255);
+        
+        builder.Property(t => t.Artist)
+            .IsRequired()
+            .HasMaxLength(255);
+        
+        builder.Property(t => t.Genre)
+            .HasMaxLength(100);
+        builder.Property(t => t.FilePath)
+            .IsRequired()
+            .HasMaxLength(1024);
+        
+        builder.HasIndex(t => new { t.Title, t.Artist })
+            .IsUnique();
     }
 }

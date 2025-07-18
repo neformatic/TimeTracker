@@ -1,0 +1,88 @@
+.login-form {
+  /* Общая стилизация формы */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form .ant-alert {
+  margin-bottom: 24px;
+  border-radius: 8px;
+}
+
+.login-form .ant-form-item {
+  margin-bottom: 18px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.login-form .ant-form-item-label > label {
+  color: #263238;
+  font-weight: 600;
+}
+
+.login-form .ant-input,
+.login-form .ant-input-affix-wrapper {
+  border-radius: 8px;
+  border-color: #d9d9d9;
+  width: 350px;
+}
+
+.login-form .ant-input-affix-wrapper .anticon {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.login-form .login-button {
+  height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #4A90E2;
+  border-color: #4A90E2;
+  max-width: 500px;
+}
+
+.login-form .forgot-password-link,
+.login-form .register-link {
+  padding: 0;
+  height: auto;
+  color: #4A90E2;
+  font-weight: 500;
+}
+
+.login-form .forgot-password-link:hover,
+.login-form .register-link:hover {
+  color: #357ABD;
+}
+
+.login-form .ant-modal-content {
+  padding: 24px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+}
+
+.login-form .ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.login-form .ant-modal {
+  top: 100px;
+}
+
+.login-button {
+  height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #4A90E2;
+  border-color: #4A90E2;
+  max-width: 500px;
+}
+
+.ant-form-item-has-success .ant-input-affix-wrapper {
+  border-color: #b5eac7 !important;
+}
+.ant-form-item-has-success .anticon-check-circle {
+  color: #52c41a !important;
+}

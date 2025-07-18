@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthContext';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import { useNavigate, Link } from 'react-router-dom';
+import '../styles/Layout.css'; // Подключаем CSS
 
 const { Header, Content, Footer } = AntLayout;
 const { Title } = Typography;
@@ -17,7 +18,6 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { isAuth, logout } = useAuth();
   const navigate = useNavigate();
-
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
 
@@ -70,14 +70,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         type="primary"
         icon={<UserOutlined />}
         size="large"
-        style={{
-          borderRadius: 8,
-          borderColor: '#4A90E2',
-          background: '#4A90E2',
-          color: '#fff',
-          fontWeight: 600,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-        }}
+        className="auth-button primary"
       >
         <Space>
           User
@@ -86,20 +79,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </Button>
     </Dropdown>
   ) : (
-    <Space>
+    <Space className="auth-buttons">
       <Button
         type="primary"
         icon={<LoginOutlined />}
         onClick={showLoginModal}
         size="large"
-        style={{
-          borderRadius: 8,
-          borderColor: '#4A90E2',
-          background: '#4A90E2',
-          color: '#fff',
-          fontWeight: 600,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-        }}
       >
         Log In
       </Button>
@@ -107,14 +92,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         icon={<UserAddOutlined />}
         onClick={showRegisterModal}
         size="large"
-        style={{
-          borderRadius: 8,
-          borderColor: '#4A90E2',
-          background: 'transparent',
-          color: '#4A90E2',
-          fontWeight: 600,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-        }}
       >
         Register
       </Button>
@@ -122,65 +99,23 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   );
 
   return (
-    <AntLayout style={{ minHeight: '100vh' }}>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 48px',
-          background: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          height: 80,
-        }}
-      >
-        <Title level={3} style={{ color: '#263238', margin: 0, fontWeight: 700 }}>
-          <Link to="/" style={{ color: '#263238', textDecoration: 'none' }}>TimeTracker</Link>
+    <AntLayout className="layout">
+      <Header className="layout-header">
+        <Title level={3} className="layout-title">
+          <Link to="/">TimeTracker</Link>
         </Title>
         <Menu
           theme="light"
           mode="horizontal"
           defaultSelectedKeys={['1']}
-          style={{
-            flex: 1,
-            minWidth: 0,
-            justifyContent: 'flex-end',
-            background: 'transparent',
-            borderBottom: 'none',
-          }}
+          className="layout-menu"
         >
+          {/* Меню можно расширить позже */}
         </Menu>
         {authButtons}
       </Header>
-
-      <Content
-        style={{
-          padding: '0',
-          flex: 1,
-          background: 'linear-gradient(to bottom, #e0f7fa 0%, #a7d9f7 100%)',
-          display: 'flex',
-          justifyContent: 'center',
-          // align-items: 'flex-start' уже установлен, это то, что нужно для избежания растяжения по высоте
-          alignItems: 'flex-start',
-          paddingTop: 24,
-          paddingBottom: 24,
-        }}
-      >
-        {children}
-      </Content>
-
-      <Footer
-        style={{
-          textAlign: 'center',
-          background: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(10px)',
-          color: '#455A64',
-          padding: '20px 0',
-        }}
-      >
-        TimeTracker ©2024 Created by You
-      </Footer>
+      <Content className="layout-content">{children}</Content>
+      <Footer className="layout-footer">TimeTracker ©2025 Created by You</Footer>
 
       {/* Модальное окно для логина */}
       <Modal
@@ -188,21 +123,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         open={isLoginModalVisible}
         onCancel={() => setIsLoginModalVisible(false)}
         footer={null}
-        width={500} // Уменьшено с 750px до 500px
-        bodyStyle={{
-          padding: '24px',
-          borderRadius: 12,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(15px)',
-        }}
+        width={500}
+        bodyStyle={{ padding: '24px', borderRadius: 12, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(15px)' }}
         maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-        // top задаёт позицию модалки сверху. Это помогает ей не растягиваться по высоте
         style={{ top: 100 }}
       >
-        <LoginForm
-          onSuccess={handleLoginSuccess}
-          onSwitchToRegister={showRegisterModal}
-        />
+        <LoginForm onSuccess={handleLoginSuccess} onSwitchToRegister={showRegisterModal} />
       </Modal>
 
       {/* Модальное окно для регистрации */}
@@ -211,21 +137,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         open={isRegisterModalVisible}
         onCancel={() => setIsRegisterModalVisible(false)}
         footer={null}
-        width={500} // Уменьшено с 750px до 500px
-        bodyStyle={{
-          padding: '24px',
-          borderRadius: 12,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(15px)',
-        }}
+        width={500}
+        bodyStyle={{ padding: '24px', borderRadius: 12, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(15px)' }}
         maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-        // top задаёт позицию модалки сверху. Это помогает ей не растягиваться по высоте
         style={{ top: 100 }}
       >
-        <RegisterForm
-          onSuccess={handleRegisterSuccess}
-          onSwitchToLogin={showLoginModal}
-        />
+        <RegisterForm onSuccess={handleRegisterSuccess} onSwitchToLogin={showLoginModal} />
       </Modal>
     </AntLayout>
   );

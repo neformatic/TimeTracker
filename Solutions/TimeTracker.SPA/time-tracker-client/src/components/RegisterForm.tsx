@@ -1,9 +1,10 @@
 // src/components/RegisterForm.tsx
-import { Button, Form, Input, App, Typography, Flex } from 'antd';
 import React, { useState } from 'react';
+import { Button, Form, Input, App, Typography, Flex } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useAuth } from '../auth/AuthContext';
 import { IRegisterRequest } from '../types/api';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import '../styles/RegisterForm.css'; // Подключаем CSS
 
 const { Text } = Typography;
 
@@ -21,7 +22,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
     setLoading(true);
     const result = await register(values);
     setLoading(false);
-
     if (result.success) {
       message.success('Registration successful! You can now log in.');
       onSuccess();
@@ -37,62 +37,63 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
       onFinish={onFinish}
       autoComplete="off"
       colon={false}
+      className="register-form"
     >
-      {/* Изменение: Устанавливаем ширину для Form.Item и центрируем его */}
+      {/* Name Field */}
       <Flex justify="center">
         <Form.Item
           label={<Text strong style={{ color: '#263238' }}>Name</Text>}
           name="name"
           rules={[{ required: true, message: 'Please input your name!' }]}
-          style={{ marginBottom: 18, width: '100%', maxWidth: 500 }}
         >
           <Input
-            prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.65)' }} />}
+            prefix={<UserOutlined />}
             placeholder="Your Name"
             size="large"
-            style={{ borderRadius: 8, borderColor: '#d9d9d9', width: 350 }}
           />
         </Form.Item>
       </Flex>
 
-      {/* Изменение: Устанавливаем ширину для Form.Item и центрируем его */}
+      {/* Email Field */}
       <Flex justify="center">
         <Form.Item
-          label={<Text strong style={{ color: '#263238' }}>Email</Text>}
+          label={<Text strong>Email</Text>}
           name="email"
-          rules={[{ required: true, message: 'Please input your email!' }, { type: 'email', message: 'The input is not valid E-mail!' }]}
-          style={{ marginBottom: 18, width: '100%', maxWidth: 500 }}
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'The input is not valid E-mail!' }
+          ]}
         >
           <Input
-            prefix={<MailOutlined style={{ color: 'rgba(0,0,0,.65)' }} />}
+            prefix={<MailOutlined />}
             placeholder="email@example.com"
             size="large"
-            style={{ borderRadius: 8, borderColor: '#d9d9d9' }}
           />
         </Form.Item>
       </Flex>
 
-      {/* Изменение: Устанавливаем ширину для Form.Item и центрируем его */}
+      {/* Password Field */}
       <Flex justify="center">
         <Form.Item
-          label={<Text strong style={{ color: '#263238' }}>Password</Text>}
+          label={<Text strong>Password</Text>}
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }, { min: 6, message: 'Password must be at least 6 characters!' }]}
-          style={{ marginBottom: 18, width: '100%', maxWidth: 500 }}
+          rules={[
+            { required: true, message: 'Please input your password!' },
+            { min: 6, message: 'Password must be at least 6 characters!' }
+          ]}
         >
           <Input.Password
-            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.65)' }} />}
+            prefix={<LockOutlined />}
             placeholder="Password"
             size="large"
-            style={{ borderRadius: 8, borderColor: '#d9d9d9' }}
           />
         </Form.Item>
       </Flex>
 
-      {/* Изменение: Устанавливаем ширину для Form.Item и центрируем его */}
+      {/* Confirm Password Field */}
       <Flex justify="center">
         <Form.Item
-          label={<Text strong style={{ color: '#263238' }}>Confirm Password</Text>}
+          label={<Text strong>Confirm Password</Text>}
           name="confirm"
           dependencies={['password']}
           hasFeedback
@@ -110,53 +111,39 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
               },
             }),
           ]}
-          style={{ marginBottom: 30, width: '100%', maxWidth: 500 }}
         >
           <Input.Password
-            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.65)' }} />}
+            prefix={<LockOutlined />}
             placeholder="Confirm Password"
             size="large"
-            style={{ borderRadius: 8, borderColor: '#d9d9d9' }}
           />
         </Form.Item>
       </Flex>
 
-      {/* Изменение: Оборачиваем кнопку в Flex для центрирования, возвращаем `block` и убираем `width` из стиля кнопки */}
+      {/* Submit Button */}
       <Form.Item style={{ marginBottom: 16 }}>
         <Flex justify="center">
           <Button
             type="primary"
             htmlType="submit"
             loading={loading}
-            block // Возвращаем block
+            block
             size="large"
-            style={{
-              height: 48,
-              borderRadius: 8,
-              fontSize: 16,
-              fontWeight: 600,
-              background: '#4A90E2',
-              borderColor: '#4A90E2',
-              maxWidth: 500, // Устанавливаем ту же максимальную ширину, что и для полей
-            }}
+            className="register-button"
           >
             Register
           </Button>
         </Flex>
       </Form.Item>
-      <Flex justify="center" style={{ maxWidth: 300, margin: '0 auto' }}> {/* Центрируем "Already have an account?" */}
+
+      {/* Login Link */}
+      <Flex justify="center" style={{ maxWidth: 300, margin: '0 auto' }}>
         <Text style={{ color: '#455A64' }}>
           Already have an account?{' '}
           <Button
             type="link"
             onClick={onSwitchToLogin}
-            style={{
-              padding: 0,
-              height: 'auto',
-              verticalAlign: 'baseline',
-              color: '#4A90E2',
-              fontWeight: 600
-            }}
+            className="login-link"
           >
             Log In!
           </Button>

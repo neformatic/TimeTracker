@@ -59,6 +59,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<ITrackService, TrackService>();
 
         services.AddScoped<IHashHelper, HashHelper>();
         services.AddScoped<IPasswordHelper, PasswordHelper>();

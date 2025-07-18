@@ -1,0 +1,44 @@
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form .ant-form-item {
+  margin-bottom: 18px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.register-form .ant-form-item-label > label {
+  color: #263238;
+  font-weight: 600;
+}
+
+.register-form .ant-input,
+.register-form .ant-input-affix-wrapper {
+  border-radius: 8px;
+  border-color: #d9d9d9;
+  width: 350px;
+}
+
+.register-form .ant-input-affix-wrapper .anticon {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.register-form .register-button {
+  height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #4A90E2;
+  border-color: #4A90E2;
+  max-width: 500px;
+}
+
+.register-form .login-link {
+  padding: 0;
+  height: auto;
+  vertical-align: baseline;
+  color: #4A90E2;
+  font-weight: 600;
+}

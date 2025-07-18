@@ -1,6 +1,7 @@
 using System.Reflection;
 using TimeTracker.API.Infrastructure;
 using TimeTracker.API.Middleware;
+using TimeTracker.BLL;
 
 var builder = WebApplication.CreateBuilder(args);
 var isDevelopment = !builder.Environment.IsProduction();
@@ -8,7 +9,7 @@ var appSettings = builder.Services.AddSettingsConfiguration(builder);
 
 builder.Services.AddCors(appSettings);
 builder.Services.AddDependencyInjection(builder.Configuration, appSettings);
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(BllAssemblyReference)));
 builder.Services.AddJwtAuthentication(appSettings.JwtSecret);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

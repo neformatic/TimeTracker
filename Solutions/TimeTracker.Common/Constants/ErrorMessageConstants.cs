@@ -16,4 +16,5 @@ public class ErrorMessageConstants
     public const string ResetPasswordTokenInvalidOrExpired = "Link is not active anymore, please, go to authorization page and try again";
     public const string SetPasswordTokenInvalidOrExpiredTemplate = "Link is not active anymore";
     public const string ContactEmailAlreadyInUse = "Email should be unique";
+    public const string TrackAlreadyExists = "Track should be unique";
 }
